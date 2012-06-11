@@ -10,5 +10,6 @@ class StaticPagesController < ApplicationController
   end
 
   def contact
+  	puts "hede"
   end
 end
