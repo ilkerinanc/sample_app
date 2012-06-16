@@ -12,6 +12,8 @@
 class User < ActiveRecord::Base
   	
   	has_secure_password
+  	has_many :microposts, dependent: :destroy
+
   	attr_accessible :email, :name, :password, :password_confirmation
 
   	before_save {|user| user.email = email.downcase }
@@ -22,6 +24,12 @@ class User < ActiveRecord::Base
 	validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
 	validates :password, length: {minimum: 6}
 	
+  def feed
+    # This is preliminary. See "Following users" for the full implementation.
+    Micropost.where("user_id = ?", id)
+  end
+
+
 	private
 
 		def create_remember_token
