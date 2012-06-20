@@ -23,13 +23,16 @@ class User < ActiveRecord::Base
                             source: :followed
   has_many :followers,  through: :reverse_relationships,
                         source: :follower
+
+  has_many :messages, dependent: :destroy
 	
-  attr_accessible :email, :name, :password, :password_confirmation
+  attr_accessible :email, :name, :password, :password_confirmation, :username
 
 	before_save {|user| user.email = email.downcase }
 	before_save :create_remember_token
 
 	validates :name, presence: true, length: {maximum: 50}
+  validates :username, presence: true, uniqueness: {case_sensitive: false}, length: {maximum: 25}
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 	validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
 	validates :password, length: {minimum: 6}
